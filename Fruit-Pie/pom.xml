@@ -10,4 +10,5 @@
         <maven.compiler.release>21</maven.compiler.release>
         <exec.mainClass>cs321team5.fruit.pie.FruitPie</exec.mainClass>
     </properties>
+    <name>Fruit-Pie</name>
 </project>
