@@ -27,8 +27,9 @@ public class FruitPie
       
       window.setLocationRelativeTo(null);
       window.setVisible(true);
+
+      gamePanel.startGameThread();
         
-      
     }
     
 }
