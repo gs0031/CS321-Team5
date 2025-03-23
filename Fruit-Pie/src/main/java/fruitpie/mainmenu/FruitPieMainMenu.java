@@ -1,8 +1,6 @@
 package fruitpie.mainmenu;
 
 import graphics.GamePanel;
-import javafx.animation.Animation;
-import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,11 +9,9 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javax.swing.*;
 
 public class FruitPieMainMenu extends Application {
@@ -48,7 +44,7 @@ public class FruitPieMainMenu extends Application {
         // Buttons
         Button startBtn = createMenuButton("▶ Start Game");
         Button instrBtn = createMenuButton("📝 Instructions");
-        Button soundBtn = createMenuButton("🔊 Sound: ON");
+        Button soundBtn = createMenuButton("🔊 Sound: OFF");
         Button exitBtn = createMenuButton("🚪 Exit");
         
         // Instructions

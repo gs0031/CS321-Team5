@@ -1,10 +1,6 @@
 package graphics;
 
 import fruitpie.InputHandeler;
-import fruitpie.mainmenu.FruitPieMainMenu;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +9,6 @@ import java.util.logging.Logger;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    final int originalTileSize = 16;
     final int maxScreenCol = 20;
     final int maxScreenRow = 16;
     int FPS = 120;
@@ -23,9 +18,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     float fruitXRatio = 0.5f;
     float fruitYRatio = 0.15f;
-    int fruitSpeed = 3;
-
-    private boolean isPaused = false;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(960, 768));
@@ -34,11 +26,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         this.addKeyListener(keyH);
 
-        // Set layout to absolute (important!)
+        // Set layout to absolute
         this.setLayout(null);
-
-        // JavaFX init
-        new JFXPanel();
 
         // Force UI to update layout
         SwingUtilities.invokeLater(() -> {
@@ -58,9 +47,6 @@ public class GamePanel extends JPanel implements Runnable {
         double nextDrawTime = System.nanoTime() + drawInterval;
 
         while (gameThread != null) {
-            if (!isPaused) {
-                update();
-            }
 
             repaint();
 
@@ -78,9 +64,6 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        int width = getWidth();
-        int height = getHeight();
-        int tileSize = Math.min(width / maxScreenCol, height / maxScreenRow);
 
         if (fruitYRatio < 0.78f) {
             if (fruitXRatio > 0.1f && keyH.leftPressed) {
