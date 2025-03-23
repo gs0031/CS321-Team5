@@ -1,8 +1,10 @@
 /*
+/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package graphics;
+
 
 import fruitpie.InputHandeler;
 import java.awt.Color;
@@ -20,7 +22,7 @@ import javax.swing.JPanel;
  */
 public class GamePanel extends JPanel implements Runnable
 {
-    // SCREEN SETINGS
+    // SCREEN SETTINGS
     final int originalTileSize = 16; //16x16 tile
     final int scale = 3;
     
@@ -29,10 +31,10 @@ public class GamePanel extends JPanel implements Runnable
     final int maxScreenRow = 16;
     final int screenWidth = tileSize * maxScreenCol; // 760 pixels
     final int screenHeight = tileSize * maxScreenRow; // 576 pixels
-
+    
     //FPS
     int FPS = 120;
-
+    
     InputHandeler keyH = new InputHandeler();
     
     Thread gameThread; // Keeps the program running until you stop it
@@ -42,10 +44,11 @@ public class GamePanel extends JPanel implements Runnable
     int fruity = 100;
     int fruitSpeed = 3;
     
+    
     public GamePanel()
     {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.yellow);
+        this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
@@ -96,7 +99,10 @@ public class GamePanel extends JPanel implements Runnable
             }
         }
     }
-
+    
+    //-----------opmpmmpompm
+    
+    
     public void update()
     {
         if(fruity < 600)
@@ -123,6 +129,9 @@ public class GamePanel extends JPanel implements Runnable
                 fruity += fruitSpeed * 10;
             }
         }
+        
+        
+        // Drop ex.
     }
     
     @Override
@@ -148,5 +157,10 @@ public class GamePanel extends JPanel implements Runnable
         
         g2.dispose();
     }
-        
+}
+
+
+// Updated imports, variables, run function, and added an update 
+//function as well as a paint component
+
 }
