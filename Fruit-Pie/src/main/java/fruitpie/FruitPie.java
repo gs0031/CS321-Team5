@@ -18,7 +18,7 @@ public class FruitPie
       JFrame window = new JFrame();  
       window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       window.setResizable(true);
-      window.setTitle("Supa-window");
+      window.setTitle("Fruit Game");
       
       GamePanel gamePanel = new GamePanel();
       window.add(gamePanel);
@@ -27,9 +27,11 @@ public class FruitPie
       
       window.setLocationRelativeTo(null);
       window.setVisible(true);
-
+        
       gamePanel.startGameThread();
         
     }
     
 }
+
+

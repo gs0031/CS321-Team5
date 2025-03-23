@@ -1,5 +1,4 @@
 /*
-/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -22,7 +21,7 @@ import javax.swing.JPanel;
  */
 public class GamePanel extends JPanel implements Runnable
 {
-    // SCREEN SETTINGS
+    // SCREEN SETINGS
     final int originalTileSize = 16; //16x16 tile
     final int scale = 3;
     
@@ -37,7 +36,7 @@ public class GamePanel extends JPanel implements Runnable
     
     InputHandeler keyH = new InputHandeler();
     
-    Thread gameThread; // Keeps the program running until you stop it
+    Thread gameThread; // Keeps the program runing until you stop it
     
     //Set fruit's default position
     int fruitx = 450;
@@ -162,5 +161,3 @@ public class GamePanel extends JPanel implements Runnable
 
 // Updated imports, variables, run function, and added an update 
 //function as well as a paint component
-
-}
