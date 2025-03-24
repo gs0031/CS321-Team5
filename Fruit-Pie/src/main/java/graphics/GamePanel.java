@@ -1,163 +1,113 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package graphics;
 
-
 import fruitpie.InputHandeler;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JPanel;
+public class GamePanel extends JPanel implements Runnable {
 
-/**
- *
- * @author brian
- */
-public class GamePanel extends JPanel implements Runnable
-{
-    // SCREEN SETINGS
-    final int originalTileSize = 16; //16x16 tile
-    final int scale = 3;
-    
-    final int tileSize = originalTileSize * scale; //16x3
     final int maxScreenCol = 20;
     final int maxScreenRow = 16;
-    final int screenWidth = tileSize * maxScreenCol; // 760 pixels
-    final int screenHeight = tileSize * maxScreenRow; // 576 pixels
-    
-    //FPS
     int FPS = 120;
-    
+
     InputHandeler keyH = new InputHandeler();
-    
-    Thread gameThread; // Keeps the program runing until you stop it
-    
-    //Set fruit's default position
-    int fruitx = 450;
-    int fruity = 100;
-    int fruitSpeed = 3;
-    
-    
-    public GamePanel()
-    {
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.black);
+    Thread gameThread;
+
+    float fruitXRatio = 0.5f;
+    float fruitYRatio = 0.15f;
+
+    public GamePanel() {
+        this.setPreferredSize(new Dimension(960, 768));
+        this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
-        this.addKeyListener(keyH);
         this.setFocusable(true);
-                
+        this.addKeyListener(keyH);
+
+        // Set layout to absolute
+        this.setLayout(null);
+
+        // Force UI to update layout
+        SwingUtilities.invokeLater(() -> {
+            this.revalidate();
+            this.repaint();
+        });
     }
-    
-    public void startGameThread()
-    {
+
+    public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
-       
     }
 
     @Override
-    public void run() 
-    {
-        double drawInterval = 1000000000/FPS; // draws the screen 60 times per second
+    public void run() {
+        double drawInterval = 1000000000.0 / FPS;
         double nextDrawTime = System.nanoTime() + drawInterval;
-            
-        while(gameThread != null) 
-        {
-            
-            // 1. UPDATE: Update information such as fruit positions
-            update();
-            
-            // 2. DRAW: draw the screen with the updated information
+
+        while (gameThread != null) {
+
             repaint();
-            
-            
-            try 
-            {
+
+            try {
                 double remainingTime = nextDrawTime - System.nanoTime();
-                remainingTime = remainingTime/1000000;
-                
-                if(remainingTime < 0)
-                {
-                    remainingTime = 0;
-                }
-                
+                remainingTime /= 1000000.0;
+
+                if (remainingTime < 0) remainingTime = 0;
                 Thread.sleep((long) remainingTime);
-                
                 nextDrawTime += drawInterval;
-            } 
-            
-            catch (InterruptedException ex) 
-            {
+            } catch (InterruptedException ex) {
                 Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-    
-    //-----------opmpmmpompm
-    
-    
-    public void update()
-    {
-        if(fruity < 600)
-        {
-            if(fruitx > 100)
-            {
-                if(keyH.leftPressed == true)
-                {
-                    fruitx -= fruitSpeed;             
-                }
-            }
 
-            if(fruitx < 775)
-            {
-                if(keyH.rightPressed == true)
-                {
-                    fruitx += fruitSpeed;                
-                }
+    public void update() {
+
+        if (fruitYRatio < 0.78f) {
+            if (fruitXRatio > 0.1f && keyH.leftPressed) {
+                fruitXRatio -= 0.01f;
             }
-            
-            //Temp drop example, will be replace with gravity
-            if(keyH.dropPressed == true)
-            {
-                fruity += fruitSpeed * 10;
+            if (fruitXRatio < 0.85f && keyH.rightPressed) {
+                fruitXRatio += 0.01f;
+            }
+            if (keyH.dropPressed) {
+                fruitYRatio += 0.05f;
             }
         }
-        
-        
-        // Drop ex.
     }
-    
+
     @Override
-    public void paintComponent(Graphics g)
-    {
-        //Creates the movable fruit
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
-        Graphics2D g2 = (Graphics2D)g;
-        
-        g2.setColor(Color.white);
-        
-        g2.fillRect(fruitx, fruity, tileSize, tileSize);
-        
-        //Creates visable boarders
-        g2.setColor(Color.green);
-                
-        g2.fillRect(50, 100, 50, 550);
-        g2.fillRect(825, 100, 50, 550);
-        
-        g2.setColor(Color.green);
-        g2.fillRect(50, 650, 825, 50);
-        
+        Graphics2D g2 = (Graphics2D) g;
+
+        int width = getWidth();
+        int height = getHeight();
+        int tileSize = Math.min(width / maxScreenCol, height / maxScreenRow);
+
+        // Background
+        GradientPaint gradient = new GradientPaint(
+                0, 0, new Color(255, 218, 185),
+                0, height, new Color(255, 255, 153)
+        );
+        g2.setPaint(gradient);
+        g2.fillRect(0, 0, width, height);
+
+        // Fruit
+        int fruitX = (int) (fruitXRatio * width);
+        int fruitY = (int) (fruitYRatio * height);
+        g2.setColor(Color.WHITE);
+        g2.fillRect(fruitX, fruitY, tileSize, tileSize);
+
+        // Borders
+        int borderThickness = Math.max(tileSize / 5, 5);
+        g2.setColor(Color.BLACK);
+        g2.fillRect(tileSize, tileSize * 2, borderThickness, height - tileSize * 3);
+        g2.fillRect(width - tileSize - borderThickness, tileSize * 2, borderThickness, height - tileSize * 3);
+        g2.fillRect(tileSize, height - tileSize, width - tileSize * 2, borderThickness);
+
         g2.dispose();
     }
 }
-
-
-// Updated imports, variables, run function, and added an update 
-//function as well as a paint component
