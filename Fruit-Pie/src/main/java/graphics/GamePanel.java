@@ -1,41 +1,58 @@
 package graphics;
 
-import fruitpie.InputHandeler;
+import fruitpie.InputHandler;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import fruitpie.mainmenu.FruitPieMainMenu;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+public class GamePanel extends StackPane implements Runnable {
 
-public class GamePanel extends JPanel implements Runnable {
+    private final Canvas canvas = new Canvas(960, 768);
+    private final GraphicsContext gc = canvas.getGraphicsContext2D();
 
     final int maxScreenCol = 20;
     final int maxScreenRow = 16;
     int FPS = 120;
 
-    InputHandeler keyH = new InputHandeler();
+    InputHandler keyH = new InputHandler();
     Thread gameThread;
 
     float fruitXRatio = 0.5f;
     float fruitYRatio = 0.15f;
 
-    public GamePanel() {
-        this.setPreferredSize(new Dimension(960, 768));
-        this.setBackground(Color.BLACK);
-        this.setDoubleBuffered(true);
-        this.setFocusable(true);
-        this.addKeyListener(keyH);
+    boolean gameOver = false;
+    int highScore = 0;
 
-        // Set layout to absolute
-        this.setLayout(null);
+    private VBox buttonBox;
+    private Scene scene;
 
-        // Force UI to update layout
-        SwingUtilities.invokeLater(() -> {
-            this.revalidate();
-            this.repaint();
-        });
+    // Constructor
+    public GamePanel(Scene scene) {
+        this.scene = scene;
+        setPrefSize(960, 768);
+
+        this.getChildren().add(canvas);
+
+        // Keyboard input
+        setFocusTraversable(true);
+        this.addEventHandler(KeyEvent.KEY_PRESSED, keyH);
+        this.addEventHandler(KeyEvent.KEY_RELEASED, keyH);
+
+        startGameThread();
     }
 
+    // Start game thread
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
@@ -47,23 +64,31 @@ public class GamePanel extends JPanel implements Runnable {
         double nextDrawTime = System.nanoTime() + drawInterval;
 
         while (gameThread != null) {
+            if (gameOver) {
+                Platform.runLater(this::renderGameOverScreen);
+                return;
+            }
 
-            repaint();
+            update();
+            Platform.runLater(this::render);
 
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
                 remainingTime /= 1000000.0;
-
                 if (remainingTime < 0) remainingTime = 0;
                 Thread.sleep((long) remainingTime);
                 nextDrawTime += drawInterval;
             } catch (InterruptedException ex) {
-                Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
     }
 
+    // Update game logic
     public void update() {
+        if (keyH.escPressed) {
+            gameOver = true;
+        }
 
         if (fruitYRatio < 0.78f) {
             if (fruitXRatio > 0.1f && keyH.leftPressed) {
@@ -78,36 +103,89 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-
-        int width = getWidth();
-        int height = getHeight();
+    // Render game visuals
+    public void render() {
+        int width = (int) canvas.getWidth();
+        int height = (int) canvas.getHeight();
         int tileSize = Math.min(width / maxScreenCol, height / maxScreenRow);
 
-        // Background
-        GradientPaint gradient = new GradientPaint(
-                0, 0, new Color(255, 218, 185),
-                0, height, new Color(255, 255, 153)
-        );
-        g2.setPaint(gradient);
-        g2.fillRect(0, 0, width, height);
+        gc.setFill(Color.PEACHPUFF);
+        gc.fillRect(0, 0, width, height);
 
-        // Fruit
         int fruitX = (int) (fruitXRatio * width);
         int fruitY = (int) (fruitYRatio * height);
-        g2.setColor(Color.WHITE);
-        g2.fillRect(fruitX, fruitY, tileSize, tileSize);
+        gc.setFill(Color.WHITE);
+        gc.fillRect(fruitX, fruitY, tileSize, tileSize);
 
-        // Borders
         int borderThickness = Math.max(tileSize / 5, 5);
-        g2.setColor(Color.BLACK);
-        g2.fillRect(tileSize, tileSize * 2, borderThickness, height - tileSize * 3);
-        g2.fillRect(width - tileSize - borderThickness, tileSize * 2, borderThickness, height - tileSize * 3);
-        g2.fillRect(tileSize, height - tileSize, width - tileSize * 2, borderThickness);
+        gc.setFill(Color.BLACK);
+        gc.fillRect(tileSize, tileSize * 2, borderThickness, height - tileSize * 3);
+        gc.fillRect(width - tileSize - borderThickness, tileSize * 2, borderThickness, height - tileSize * 3);
+        gc.fillRect(tileSize, height - tileSize, width - tileSize * 2, borderThickness);
+    }
 
-        g2.dispose();
+    // Game Over UI
+    public void renderGameOverScreen() {
+        render(); // Draw last game frame
+
+        if (buttonBox != null) this.getChildren().remove(buttonBox);
+
+        gc.setFill(Color.DARKORANGE);
+        gc.setFont(Font.font("Comic Sans MS", 48));
+        gc.fillText("Game Over!", 320, 200);
+
+        gc.setFill(Color.DARKGREEN);
+        gc.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, 18));
+        gc.fillText("🏆 High Score: " + highScore, 360, 300);
+
+        // Buttons
+        Button mainMenuButton = createMenuButton("Main Menu");
+        Button exitBtn = createMenuButton("🚪 Exit");
+
+        mainMenuButton.setOnAction(e -> {
+            // Launch FruitPieMainMenu when the button is clicked
+            Platform.runLater(() -> {
+                try {
+                    // Start the main menu (FruitPieMainMenu)
+                    new FruitPieMainMenu().start(new Stage());
+                    // Close the current game window (this Stage)
+                    ((Stage) mainMenuButton.getScene().getWindow()).close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+        });
+
+        exitBtn.setOnAction(e -> Platform.exit());
+
+        VBox menuBox = new VBox(15, mainMenuButton, exitBtn);
+        menuBox.setAlignment(Pos.CENTER);
+
+        VBox centerBox = new VBox(30, menuBox);
+        centerBox.setAlignment(Pos.CENTER);
+
+        // Add the menu to the current StackPane (this)
+        this.getChildren().add(centerBox);
+    }
+
+
+    // Placeholder for main menu return
+    private void goToMainMenu() {
+        // Replace this with your actual main menu navigation logic
+        System.out.println("Going back to main menu...");
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+    
+    private Button createMenuButton(String text) {
+        Button btn = new Button(text);
+        btn.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, 18));
+        btn.setStyle("-fx-background-color: LIGHTYELLOW; -fx-text-fill: darkred; -fx-background-radius: 15;");
+        btn.setPrefWidth(220);
+        btn.setOnMouseEntered(e -> btn.setScaleX(1.1));
+        btn.setOnMouseExited(e -> btn.setScaleX(1.0));
+        return btn;
     }
 }
