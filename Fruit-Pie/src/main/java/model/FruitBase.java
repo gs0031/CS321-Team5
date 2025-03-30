@@ -4,50 +4,39 @@
  */
 package model;
 
+import model.units.Vector2D;
+import java.awt.image.BufferedImage;
+
+
 /**
  * 
  * @author Scheherazade
  */
 public abstract class FruitBase implements Fruit {
-    protected int x; // x-coord of center
-    protected int y; // y-coord of center
-    protected int radius; // radius of fruit
+    protected Vector2D position;
+    protected float radius;
+    protected static BufferedImage image;
+    
     /**
-     * Constructor
-     * @param x x-coord of center
-     * @param y y-coord of center
-     * @param radius radius of fruit
+     * Constructor of abstract fruit type
+     * @param x
+     * @param y
+     * @param radius
      */
-    public FruitBase(int x, int y, int radius) {
-        this.x = x;
-        this.y = y;
+    public FruitBase(float x, float y, float radius) {
+ 
+        this.position = new Vector2D(x, y);
         this.radius = radius;
-    }
-    
-    @Override
-    public int getX() {
-        return x;
+        
     }
     @Override
-    public int getY() {
-        return y;
+    public Vector2D getPosition() {
+        return position;
     }
     @Override
-    public void setX(int x) {
-        this.x = x;
+    public void setPosition(float x, float y) {
+        this.position.x = x;
+        this.position.y = y;
     }
-    @Override
-    public void setY(int y) {
-        this.y = y;
-    }
-    @Override
-    public int getRadius(){
-        return radius;
-    }
-    @Override
-    public void setRadius(int radius) {
-        this.radius = radius;
-    }
-    
     
 }

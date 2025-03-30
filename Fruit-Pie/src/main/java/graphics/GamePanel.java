@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Combination;
+import model.Fruit;
+import model.Orange;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -106,7 +109,13 @@ public class GamePanel extends JPanel implements Runnable {
         g2.setColor(Color.BLACK);
         g2.fillRect(tileSize, tileSize * 2, borderThickness, height - tileSize * 3);
         g2.fillRect(width - tileSize - borderThickness, tileSize * 2, borderThickness, height - tileSize * 3);
-        g2.fillRect(tileSize, height - tileSize, width - tileSize * 2, borderThickness);
+        g2.fillRect(tileSize, height - tileSize, width - tileSize * 2, borderThickness);        
+        // test
+        Combination fruits = new Combination();
+        Orange orange = new Orange(10, 20, 5);
+        fruits.addFruit(orange);
+        FruitSprite sprite = new FruitSprite("resources/orange.png");
+        sprite.draw(g2, orange.getPosition());
 
         g2.dispose();
     }

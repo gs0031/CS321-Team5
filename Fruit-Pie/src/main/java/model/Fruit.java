@@ -4,40 +4,31 @@
  */
 package model;
 
+import model.units.Vector2D;
+
 /**
  *
  * @author Scheherazade
  */
 public interface Fruit {
     
-    /**
-     * 
-     * @return x-coord of fruit center
-     */
-    int getX();
-    /**
-     * 
-     * @return y-coord of fruit center
-     */
-    int getY();
-    /**
-     * 
-     * @param x new x-coordinate 
-     */
-    void setX(int x);
-    /**
-     * 
-     * @param y new y-coordinate
-     */
-    void setY(int y);
-    /**
-     * 
-     * @return radius of the fruit body
-     */
-    int getRadius();
-    /**
-     * @param radius new radius
-     */
-    void setRadius(int radius);
+    /*
+    * @return vector of floating point x and y center of fruit
+    */
+    Vector2D getPosition();
+    /*
+    * @param x floating point coordinate of x to be registered
+    * @param y floating point coordinate of y to be registered
+    */
+    void setPosition(float x, float y);
+    /*
+    * @return floating point radius of fruit
+    */
+    float getRadius();
+    /*
+    * @param radius floating point radius to be registered
+    */
+    void setRadius(float radius);
     
 }
+ 
