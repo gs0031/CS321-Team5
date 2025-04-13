@@ -36,6 +36,8 @@ public class GamePanel extends StackPane implements Runnable {
 
     float fruitXRatio = 0.5f; // Starting position of the fruit (middle of the screen)
     float fruitYRatio = 0.15f; // Starting Y position for the fruit (top of the screen)
+    
+    private boolean validHi;
 
     boolean gameOver = false;
     int score = 0;  // Track the current score
@@ -117,57 +119,78 @@ public class GamePanel extends StackPane implements Runnable {
             gameOver = true;
         }
 
-        if (isDropping) {
-    fruitXRatio += fruitXVelocity;
-    fruitYRatio += dropSpeed;
+        // If fruit is in dropping state, gradually move it down
+        if (isDropping && fruitYRatio < 0.88f) {
+            fruitYRatio += dropSpeed; // Move the fruit down slowly
 
-    float radiusRatio = 0.5f / maxScreenCol; // half a tile
-    boolean collisionDetected = false;
+            // Check for collisions with dropped fruits
+            boolean collisionDetected = false;
 
-    for (int i = 0; i < droppedFruits.size(); i++) {
-        Float[] fruit = droppedFruits.get(i);
-        float dx = fruit[0] - fruitXRatio;
-        float dy = fruit[1] - fruitYRatio;
-        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+            // Check for collisions with previously dropped fruits
+           
+            for (Float[] fruit : droppedFruits) {
+                if (Math.abs(fruit[0] - fruitXRatio) < 0.1 && 
+                    Math.abs(fruit[1] - fruitYRatio) < 0.1) {
+                    
+                    
+                        collisionDetected = true;
+                        
+                        isDropping = false; 
+                        
+                        break;
+                }
+            }
+            
+            if ( fruitYRatio <= 0.25f)
+            {
+                validHi = true;
+            }
 
-        if (distance < radiusRatio * 2) {
-            // Collision detected: Snap on top
-            fruitYRatio = fruit[1] - radiusRatio * 2;
-            settleFruit();
-            collisionDetected = true;
-            break;
+            if (collisionDetected) {
+                collisionCount++;  // Increment the collision count
+
+                if (collisionCount >= 100 || (validHi && fruitYRatio <= 0.2f)) {
+                    gameOver = true;  // End the game after 5 collisions
+                    return;
+                }
+
+                // If collision is detected, add the fruit to the list and spawn a new fruit
+                isDropping = false;  // End the drop
+                droppedFruits.add(new Float[] { fruitXRatio, fruitYRatio });
+                droppedFruitColors.add(currentFruitColor);  // Add the consistent color of the current fruit
+                score += 10;  // Increment score by 10
+                checkHighScore();  // Check if a new high score is reached
+                spawnNewFruit();  // Reset position of the next falling fruit                
+            } else if (fruitYRatio >= 0.88f) {
+                // If no collision and the fruit reaches the bottom border, stop it
+                fruitYRatio = 0.88f;  // Stop the drop at the bottom border
+                droppedFruits.add(new Float[] { fruitXRatio, fruitYRatio });
+                droppedFruitColors.add(currentFruitColor);  // Add the color of the new fruit
+                score += 10;  // Increment score by 10
+                checkHighScore();  // Check if a new high score is reached
+                spawnNewFruit();  // Spawn a new fruit
+                isDropping = false;  // End the drop
+            }
         }
-    }
-
-    // No collision, but reached bottom
-    if (!collisionDetected && fruitYRatio >= 0.88f) {
-        fruitYRatio = 0.88f;
-        settleFruit();
-    }
-}
 
         // Control movement if the fruit is not currently dropping
-        if (fruitYRatio < 0.88f) {
-            if (fruitXRatio > 0.1f && keyH.leftPressed) {
-                fruitXRatio -= 0.01f;  // Move left
+        
+            // Control movement if the fruit is not currently dropping
+            if(!isDropping)
+            {
+                if (fruitYRatio < 0.88f) {
+                    if (fruitXRatio > 0.1f && keyH.leftPressed) {
+                        fruitXRatio -= 0.01f;  // Move left
+                    }
+                    if (fruitXRatio < 0.90f && keyH.rightPressed) {
+                        fruitXRatio += 0.01f;  // Move right
+                    }
+                    if (keyH.dropPressed) {
+                        fruitYRatio += 0.05f;  // Make the fruit fall faster
+                    }
+                }
             }
-            if (fruitXRatio < 0.90f && keyH.rightPressed) {
-                fruitXRatio += 0.01f;  // Move right
-            }
-            if (keyH.dropPressed) {
-                fruitYRatio += 0.05f;  // Make the fruit fall faster
-            }
-        }
     }
-
-    private void settleFruit() {
-    droppedFruits.add(new Float[] { fruitXRatio, fruitYRatio });
-    droppedFruitColors.add(currentFruitColor);
-    score += 10;
-    checkHighScore();
-    spawnNewFruit();
-    isDropping = false;
-}
 
     // Check if the current score is a new high score
     private void checkHighScore() {
