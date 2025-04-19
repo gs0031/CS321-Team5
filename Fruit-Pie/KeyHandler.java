@@ -1,105 +1,58 @@
-package fruitpie;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Test;
 
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class InputHandler implements EventHandler<KeyEvent>, MouseMotionListener  
-{
+/**
+ *
+ * @author brian
+ */
+public class KeyHandler implements KeyListener {
+    
+    public boolean leftPressed, rightPressed;
 
-    public boolean leftPressed, rightPressed, dropPressed, escPressed, validMouse;
-    
-    public float xMouse;
-    
-    
-    
     @Override
-    public void mouseMoved(MouseEvent e) 
+    public void keyTyped(KeyEvent e) 
     {
-        float code = e.getXOnScreen();
-        validMouse = true;
-        xMouse = code;
-        System.out.println("5005");
+        // Not Needed ----------------------------------------
     }
 
-    public void mouseReleased(MouseEvent e) 
-        {
-            float code = e.getButton();
-
-            if(code == MouseEvent.BUTTON1)
-            {
-                dropPressed = false;
-            }
-        }
-
-
     @Override
-    public void mouseDragged(MouseEvent e) 
-    {}
-    
-    
-    
-    @Override
-    public void handle(KeyEvent e) 
+    public void keyPressed(KeyEvent e) 
     {
-        if (e.getEventType() == KeyEvent.KEY_PRESSED) 
+        int code = e.getKeyCode();
+        
+        if (code == KeyEvent.VK_A)
         {
-            KeyCode code = e.getCode();
-
-            if (code == KeyCode.A) 
-            {
-                leftPressed = true;
-            }
-
-            if (code == KeyCode.D) 
-            {
-                rightPressed = true;
-            }
-
-            if (code == KeyCode.M) 
-            {
-                dropPressed = true;
-            }
-
-            // Handle the Esc key
-            if (code == KeyCode.ESCAPE) 
-            {
-                escPressed = true;
-            }
+            leftPressed = true;
         }
-
-        if (e.getEventType() == KeyEvent.KEY_RELEASED) 
+        
+        if (code == KeyEvent.VK_D)
         {
-            KeyCode code = e.getCode();
-
-            if (code == KeyCode.A) 
-            {
-                leftPressed = false;
-            }
-
-            if (code == KeyCode.D) 
-            {
-                rightPressed = false;
-            }
-
-            if (code == KeyCode.M) 
-            {
-                dropPressed = false;
-            }
-
-            // Handle the Esc key
-            if (code == KeyCode.ESCAPE) 
-            {
-                escPressed = false;
-            }
-
+            rightPressed = true;
         }
+        
     }
-    
-}
 
+    @Override
+    public void keyReleased(KeyEvent e) 
+    {
+        int code = e.getKeyCode();
+        
+        if (code == KeyEvent.VK_A)
+        {
+            leftPressed = false;
+        }
+        
+        if (code == KeyEvent.VK_D)
+        {
+            rightPressed = false;
+        }
+        
     }
     
 }
