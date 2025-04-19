@@ -36,6 +36,8 @@ public class GamePanel extends StackPane implements Runnable {
 
     float fruitXRatio = 0.5f; // Starting position of the fruit (middle of the screen)
     float fruitYRatio = 0.15f; // Starting Y position for the fruit (top of the screen)
+    
+    private boolean validHi;
 
     boolean gameOver = false;
     int score = 0;  // Track the current score
@@ -125,19 +127,29 @@ public class GamePanel extends StackPane implements Runnable {
             boolean collisionDetected = false;
 
             // Check for collisions with previously dropped fruits
+           
             for (Float[] fruit : droppedFruits) {
                 if (Math.abs(fruit[0] - fruitXRatio) < 0.1 && 
                     Math.abs(fruit[1] - fruitYRatio) < 0.1) {
-                    fruitYRatio = fruit[1];  // Stop at the Y position of the collided fruit
-                    collisionDetected = true;
-                    break;
+                    
+                    
+                        collisionDetected = true;
+                        
+                        isDropping = false; 
+                        
+                        break;
                 }
+            }
+            
+            if ( fruitYRatio <= 0.25f)
+            {
+                validHi = true;
             }
 
             if (collisionDetected) {
                 collisionCount++;  // Increment the collision count
 
-                if (collisionCount >= 5) {
+                if (collisionCount >= 100 || (validHi && fruitYRatio <= 0.2f)) {
                     gameOver = true;  // End the game after 5 collisions
                     return;
                 }
@@ -162,17 +174,22 @@ public class GamePanel extends StackPane implements Runnable {
         }
 
         // Control movement if the fruit is not currently dropping
-        if (fruitYRatio < 0.88f) {
-            if (fruitXRatio > 0.1f && keyH.leftPressed) {
-                fruitXRatio -= 0.01f;  // Move left
+        
+            // Control movement if the fruit is not currently dropping
+            if(!isDropping)
+            {
+                if (fruitYRatio < 0.88f) {
+                    if (fruitXRatio > 0.1f && keyH.leftPressed) {
+                        fruitXRatio -= 0.01f;  // Move left
+                    }
+                    if (fruitXRatio < 0.90f && keyH.rightPressed) {
+                        fruitXRatio += 0.01f;  // Move right
+                    }
+                    if (keyH.dropPressed) {
+                        fruitYRatio += 0.05f;  // Make the fruit fall faster
+                    }
+                }
             }
-            if (fruitXRatio < 0.90f && keyH.rightPressed) {
-                fruitXRatio += 0.01f;  // Move right
-            }
-            if (keyH.dropPressed) {
-                fruitYRatio += 0.05f;  // Make the fruit fall faster
-            }
-        }
     }
 
     // Check if the current score is a new high score
