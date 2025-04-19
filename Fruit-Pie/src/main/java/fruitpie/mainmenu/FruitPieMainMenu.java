@@ -57,7 +57,7 @@ public class FruitPieMainMenu extends Application {
             Alert instructions = new Alert(Alert.AlertType.INFORMATION);
             instructions.setTitle("How to Play");
             instructions.setHeaderText("Fruit Pie - Instructions");
-            instructions.setContentText("🍓 How to Play: \n▶ TBD.");
+            instructions.setContentText("🍓 How to Play: \n▶ Use A and D keys to move the fruit. \n▶ Left click the mouse to drop the fruit. \n▶ Drop as many fruit as possible without filling up the game play area.");
             instructions.showAndWait();
         });
 
