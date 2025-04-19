@@ -16,21 +16,27 @@ import model.units.Vector2D;
  * @author Scheherazade
  */
 public class FruitSprite extends JComponent {
-    private BufferedImage fruitImage;
+    static private BufferedImage fruitImage;
     
     public FruitSprite(String resourcePath) {
         loadResource(resourcePath);
     }
-    private void loadResource(String path) { 
+    public void loadResource(String path) { 
         try {
-            fruitImage = ImageIO.read(FruitSprite.class.getResource(path));
+            try (InputStream input = FruitSprite.class.getClassLoader().getResourceAsStream(path)) {
+                if( input != null ) {
+                    fruitImage = ImageIO.read(input);
+                } else {
+//                    System.err.println("Resource not found");
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void draw(Graphics2D g, Vector2D position) {
+    public void draw(Graphics2D g, Vector2D position, int radius) {
         super.paintComponent(g);
-        g.drawImage(fruitImage, (int)position.x, (int)position.y, this);
+        g.drawImage(fruitImage, (int)position.x, (int)position.y, radius, radius, this);
         
     }
 }
