@@ -187,6 +187,7 @@ public class GamePanel extends StackPane implements Runnable
                 
                 collisionCount++;  // Increment the collision count
                 
+                /*-------------------------------------------------------------------
                 //Merging Logic
                 if (currentFruitColor.equals(collidingFruitColor))
                 {
@@ -206,6 +207,8 @@ public class GamePanel extends StackPane implements Runnable
                     spawnNewFruit();
                     return;  // Exit update to skip default drop handling
                 }
+                -----------------------------------------------------------------------
+                */
 
                 if (collisionCount >= 100 || (validHi && fruitYRatio <= 0.2f)) 
                 {
