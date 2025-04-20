@@ -182,13 +182,11 @@ public class GamePanel extends StackPane implements Runnable
                 collidingFruitColor = droppedFruitColors.get(collidingIndex);
 
                 System.out.println("Collision detected!");
-                System.out.println("Current Fruit Color: " + currentFruitColor.toString());
-                System.out.println("Colliding Fruit Color: " + collidingFruitColor.toString());
                 
                 collisionCount++;  // Increment the collision count
                 
                 /*
-                //Merging Logic
+                //Color based Merging Logic
                 if (currentFruitColor.equals(collidingFruitColor))
                 {
                     // Remove the old fruit
