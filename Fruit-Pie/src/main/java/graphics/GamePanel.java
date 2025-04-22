@@ -59,11 +59,13 @@ public class GamePanel extends StackPane implements Runnable
     private double dropSpeed = 0.02; // Speed of the drop
 
     private List<Float[]> droppedFruits = new ArrayList<>(); // List to track all dropped fruits
-    private List<Color> droppedFruitColors = new ArrayList<>(); // List to track fruit colors
+    private List<FruitSprite> droppedFruitColors = new ArrayList<>(); // List to track fruit colors
 
     // Current fruit color
-    private Color currentFruitColor = getRandomFruitColor();
-    private Color collidingFruitColor;
+    private SpriteFactory spriteFactory = new SpriteFactory();
+    private FruitSprite currentFruitColor = getRandomFruit();
+    private FruitSprite collidingFruitColor;
+    
 
     private int collisionCount = 0; // Track the number of collisions
 
@@ -190,9 +192,9 @@ public class GamePanel extends StackPane implements Runnable
             {
                 collidingFruitColor = droppedFruitColors.get(collidingIndex);
 
-                System.out.println("Collision detected!");
-                System.out.println("Current Fruit Color: " + currentFruitColor.toString());
-                System.out.println("Colliding Fruit Color: " + collidingFruitColor.toString());
+//                System.out.println("Collision detected!");
+//                System.out.println("Current Fruit Color: " + currentFruitColor.toString());
+//                System.out.println("Colliding Fruit Color: " + collidingFruitColor.toString());
                 
                 collisionCount++;  // Increment the collision count
                 
@@ -352,7 +354,7 @@ public class GamePanel extends StackPane implements Runnable
     private void spawnNewFruit() 
     {
         // Set the color for the current fruit (randomly set at the beginning)
-        currentFruitColor = getRandomFruitColor(); // Assign color to current fruit if it's the first fruit
+//        currentFruitColor = getRandomFruit(); // Assign color to current fruit if it's the first fruit
 
         // Reset the fruit position
         fruitXRatio = 0.5f; // Middle of the screen
@@ -377,11 +379,13 @@ public class GamePanel extends StackPane implements Runnable
             int fruitY = (int) (fruit[1] * height);
             int radius = tileSize / 2; // Radius of the fruit (half the tile size)
 
-            Color fruitColor = droppedFruitColors.get(i); // Get color from the list
+            FruitSprite fruitColor = droppedFruitColors.get(i); // Get color from the list
 
             // Draw a circle to represent a fruit
-            gc.setFill(fruitColor);
-            gc.fillOval(fruitX - radius, fruitY - radius, radius * 2, radius * 2);
+//            gc.setFill(fruitColor);
+//            gc.fillOval(fruitX - radius, fruitY - radius, radius * 2, radius * 2);
+            fruitColor.draw(gc, fruitX, fruitY, radius*2);
+            
         }
 
         // Render the current dropping fruit
@@ -390,20 +394,10 @@ public class GamePanel extends StackPane implements Runnable
         int currentRadius = tileSize / 2; // Radius of the fruit
 
         // Draw the current falling fruit
-        gc.setFill(currentFruitColor);
+//        gc.setFill(currentFruitColor);
         gc.fillOval(currentFruitX - currentRadius, currentFruitY - currentRadius, currentRadius * 2, currentRadius * 2);
 
         int borderThickness = Math.max(tileSize / 5, 5);
-        g2.setColor(Color.BLACK);
-        g2.fillRect(tileSize, tileSize * 2, borderThickness, height - tileSize * 3);
-        g2.fillRect(width - tileSize - borderThickness, tileSize * 2, borderThickness, height - tileSize * 3);
-        g2.fillRect(tileSize, height - tileSize, width - tileSize * 2, borderThickness);        
-        // test
-        Combination fruits = new Combination();
-        Orange orange = new Orange(10, 20, 5);
-        fruits.addFruit(orange);
-        FruitSprite sprite = new FruitSprite("resources/orange.png");
-        sprite.draw(g2, orange.getPosition());
         gc.setFill(Color.BLACK);
         gc.fillRect(tileSize, tileSize * 2, borderThickness, height - tileSize * 3);
         gc.fillRect(width - tileSize - borderThickness, tileSize * 2, borderThickness, height - tileSize * 3);
@@ -474,20 +468,20 @@ public class GamePanel extends StackPane implements Runnable
     }
 
     // This method returns a random color representing a fruit
-    private Color getRandomFruitColor() 
+    private FruitSprite getRandomFruit() 
     {
         int randomFruit = (int) (Math.random() * 3);  // Randomly pick a fruit type
 
         switch (randomFruit) 
         {
             case 0:
-                return Color.rgb(255, 100, 100);  // Apple-like (Red)
-            case 1:
-                return Color.hsb(30, 0.7, 1.0);  // Orange-like (Orange)
+                return spriteFactory.getSprite("orange");
+//            case 1:
+//                return spriteFactory.getSprite("strawberry");
             case 2:
-                return Color.rgb(150, 255, 150);  // Green (Lime)
+                return spriteFactory.getSprite("banana");
             default:
-                return Color.BLUE; // Default to blue
+                return spriteFactory.getSprite("orange");
         }
     }
 }
