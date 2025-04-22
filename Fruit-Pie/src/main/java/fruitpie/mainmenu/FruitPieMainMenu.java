@@ -12,11 +12,10 @@ import javafx.scene.paint.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javax.swing.*;
 
 public class FruitPieMainMenu extends Application {
-    // sets sound to default off
     private boolean soundOn = false;
+    private Label highScoreLabel;  // Label for high score
 
     public static void main(String[] args) {
         launch(args);
@@ -26,8 +25,8 @@ public class FruitPieMainMenu extends Application {
     public void start(Stage primaryStage) {
         // Gradient Background
         Stop[] stops = new Stop[]{
-                new Stop(0, Color.PEACHPUFF),
-                new Stop(1, Color.LIGHTYELLOW)
+            new Stop(0, Color.PEACHPUFF),
+            new Stop(1, Color.LIGHTYELLOW)
         };
         LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
         Background background = new Background(new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY));
@@ -41,27 +40,26 @@ public class FruitPieMainMenu extends Application {
         title.setTextFill(Color.DARKORANGE);
         title.setEffect(new DropShadow(10, Color.ORANGE));
 
+        // High Score Display
+        highScoreLabel = new Label("🏆 High Score: " + GamePanel.highScore);  // Get the high score from GamePanel
+        highScoreLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        highScoreLabel.setTextFill(Color.DARKGREEN);
+        highScoreLabel.setTranslateX(50);
+        highScoreLabel.setTranslateY(50);
+
         // Buttons
         Button startBtn = createMenuButton("▶ Start Game");
         Button instrBtn = createMenuButton("📝 Instructions");
         Button soundBtn = createMenuButton("🔊 Sound: OFF");
         Button exitBtn = createMenuButton("🚪 Exit");
-        
-        // Instructions
+
         instrBtn.setOnAction(e -> {
-        Alert instructions = new Alert(Alert.AlertType.INFORMATION);
-        instructions.setTitle("How to Play");
-        instructions.setHeaderText("Fruit Pie - Instructions");
-        instructions.setContentText(
-            """
-            🍓 How to Play:
-
-            ▶ TBD.
-
-            """);
-
-        instructions.showAndWait();
-});
+            Alert instructions = new Alert(Alert.AlertType.INFORMATION);
+            instructions.setTitle("How to Play");
+            instructions.setHeaderText("Fruit Pie - Instructions");
+            instructions.setContentText("🍓 How to Play: \n▶ Use A and D keys to move the fruit. \n▶ Left click the mouse to drop the fruit. \n▶ Drop as many fruit as possible without filling up the game play area.");
+            instructions.showAndWait();
+        });
 
         soundBtn.setOnAction(e -> {
             soundOn = !soundOn;
@@ -71,24 +69,12 @@ public class FruitPieMainMenu extends Application {
         exitBtn.setOnAction(e -> primaryStage.close());
 
         startBtn.setOnAction(e -> {
-            // Launch Swing GamePanel
-            SwingUtilities.invokeLater(() -> {
-                JFrame window = new JFrame();
-                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                window.setResizable(true);
-                window.setTitle("Fruit Game");
-
-                GamePanel gamePanel = new GamePanel();
-                window.add(gamePanel);
-                window.pack();
-                window.setLocationRelativeTo(null);
-                window.setVisible(true);
-
-                gamePanel.startGameThread();
-            });
-
-            // Close JavaFX main menu
-            primaryStage.close();
+            // Launch JavaFX GamePanel
+            GamePanel gamePanel = new GamePanel(primaryStage.getScene());  // Pass the scene to GamePanel
+            Scene gameScene = new Scene(new StackPane(gamePanel));
+            primaryStage.setScene(gameScene);
+            primaryStage.setTitle("Fruit Pie - Game");
+            primaryStage.show();
         });
 
         VBox menuBox = new VBox(15, startBtn, instrBtn, soundBtn, exitBtn);
@@ -97,18 +83,12 @@ public class FruitPieMainMenu extends Application {
         VBox centerBox = new VBox(30, title, menuBox);
         centerBox.setAlignment(Pos.CENTER);
 
-        // High Score Display (still optional; keep or remove)
-        Label highScoreLabel = new Label("🏆 High Score: 0");
-        highScoreLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-        highScoreLabel.setTextFill(Color.DARKGREEN);
-        highScoreLabel.setTranslateX(10);
-        highScoreLabel.setTranslateY(10);
-
+        // Use StackPane to position elements
         StackPane stack = new StackPane();
-        stack.getChildren().addAll(centerBox, highScoreLabel);
+        stack.getChildren().addAll(centerBox, highScoreLabel); // Ensure highScoreLabel is on top
         StackPane.setAlignment(highScoreLabel, Pos.TOP_LEFT);
 
-        root.setCenter(stack);
+        root.setCenter(stack); // Set StackPane as center
 
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setTitle("Fruit Pie - Main Menu");
@@ -125,5 +105,4 @@ public class FruitPieMainMenu extends Application {
         btn.setOnMouseExited(e -> btn.setScaleX(1.0));
         return btn;
     }
-
 }
