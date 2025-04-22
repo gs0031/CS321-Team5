@@ -394,8 +394,8 @@ public class GamePanel extends StackPane implements Runnable
         int currentRadius = tileSize / 2; // Radius of the fruit
 
         // Draw the current falling fruit
-//        gc.setFill(currentFruitColor);
-        gc.fillOval(currentFruitX - currentRadius, currentFruitY - currentRadius, currentRadius * 2, currentRadius * 2);
+        FruitSprite fruitColor = currentFruitColor;
+        fruitColor.draw(gc, currentFruitX - currentRadius, currentFruitY - currentRadius, currentRadius * 2);
 
         int borderThickness = Math.max(tileSize / 5, 5);
         gc.setFill(Color.BLACK);
