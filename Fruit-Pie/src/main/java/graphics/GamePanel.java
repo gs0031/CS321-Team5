@@ -17,7 +17,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import fruitpie.mainmenu.FruitPieMainMenu;
 
-<<<<<<< HEAD
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Level;
@@ -25,10 +25,9 @@ import java.util.logging.Logger;
 import model.Combination;
 import model.Fruit;
 import model.Orange;
-=======
+
 import java.util.ArrayList;
 import java.util.List;
->>>>>>> main
 
 public class GamePanel extends StackPane implements Runnable 
 {
@@ -395,7 +394,6 @@ public class GamePanel extends StackPane implements Runnable
         gc.fillOval(currentFruitX - currentRadius, currentFruitY - currentRadius, currentRadius * 2, currentRadius * 2);
 
         int borderThickness = Math.max(tileSize / 5, 5);
-<<<<<<< HEAD
         g2.setColor(Color.BLACK);
         g2.fillRect(tileSize, tileSize * 2, borderThickness, height - tileSize * 3);
         g2.fillRect(width - tileSize - borderThickness, tileSize * 2, borderThickness, height - tileSize * 3);
@@ -406,12 +404,10 @@ public class GamePanel extends StackPane implements Runnable
         fruits.addFruit(orange);
         FruitSprite sprite = new FruitSprite("resources/orange.png");
         sprite.draw(g2, orange.getPosition());
-=======
         gc.setFill(Color.BLACK);
         gc.fillRect(tileSize, tileSize * 2, borderThickness, height - tileSize * 3);
         gc.fillRect(width - tileSize - borderThickness, tileSize * 2, borderThickness, height - tileSize * 3);
         gc.fillRect(tileSize, height - tileSize, width - tileSize * 2, borderThickness);
->>>>>>> main
 
         // Display score
         gc.setFill(Color.DARKGREEN);
