@@ -16,6 +16,16 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import fruitpie.mainmenu.FruitPieMainMenu;
+import java.util.concurrent.ThreadLocalRandom;
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Combination;
+import model.Fruit;
+import model.Orange;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +81,14 @@ public class GamePanel extends StackPane implements Runnable
     /** Speed of the fruit when dropping */
     private double dropSpeed = 0.02; 
 
+    private List<Float[]> droppedFruits = new ArrayList<>(); // List to track all dropped fruits
+    private List<FruitSprite> droppedFruitColors = new ArrayList<>(); // List to track fruit colors
+
+    // Current fruit color
+    private SpriteFactory spriteFactory = new SpriteFactory();
+    private FruitSprite currentFruitColor = getRandomFruit();
+    private FruitSprite collidingFruitColor;
+    
     /** List to track all dropped fruits positions */
     private List<Float[]> droppedFruits = new ArrayList<>();
     /** List to track dropped fruits colors */
@@ -192,33 +210,20 @@ public class GamePanel extends StackPane implements Runnable
             boolean collisionDetected = false;
             double radiusRatio = 0.5;
             
-            for (Float[] fruit : droppedFruits) 
-            {
+            for (int i = 0; i < droppedFruits.size(); i++) {
+                Float[] fruit = droppedFruits.get(i);
+                double dx = fruit[0] - fruitXRatio;
+                double dy = fruit[1] - fruitYRatio;
 
-                for (int i = 0; i < droppedFruits.size(); i++) 
-                {
-                
-                    double dx = fruit[0] - fruitXRatio;
-                    double dy = fruit[1] - fruitYRatio;
+                double distance = Math.sqrt(dx * dx + dy * dy);
 
-                    double distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < radiusRatio * 0.15) 
-                    {
-                        collidingIndex = i;
-                        collisionDetected = true;
-                        isDropping = false;
-
-                        break;
-
-                    }
+                if (distance < radiusRatio * 0.15) {
+                    collidingIndex = i;
+                    collisionDetected = true;
+                    isDropping = false;
+                    break;
                 }
             }
-            /*--------------------------------------------------------------------
-        
-            
-            -------------------------------------------------------------------
-            */
             
             if ( fruitYRatio <= 0.25f)
             {
@@ -228,52 +233,33 @@ public class GamePanel extends StackPane implements Runnable
             if (collisionDetected) 
             {
                 collidingFruitColor = droppedFruitColors.get(collidingIndex);
+                collisionCount++;
 
-                System.out.println("Collision detected!");
-                System.out.println("Current Fruit Color: " + currentFruitColor.toString());
-                System.out.println("Colliding Fruit Color: " + collidingFruitColor.toString());
-                
-                collisionCount++;  // Increment the collision count
-                
-                /*-------------------------------------------------------------------
-                //Merging Logic
-                if (currentFruitColor.equals(collidingFruitColor))
+                if (collisionCount >= 100 || (validHi && fruitYRatio <= 0.2f)) 
                 {
-                    // Remove the old fruit
-                    droppedFruits.remove(collidingIndex);
-                    droppedFruitColors.remove(collidingIndex);
-
-                    // Create a new merged fruit at the collision location
+                    gameOver = true;
+                    return;
+                }
+                
+                // Determine score based on fruit match
+                if (currentFruitColor.getName().equals(collidingFruitColor.getName())) 
+                {
+                    score += 20; // Double score if same fruit
+                } 
+                else 
+                {
+                    score += 10; // Normal score if different
+                    
+                    // Stack the fruit — no merging or removal
                     droppedFruits.add(new Float[] { fruitXRatio, fruitYRatio });
-
-                    // You could use a brighter or special color for merged fruit (or upgrade logic)
-                    Color mergedColor = Color.PURPLE;  // Placeholder
-                    droppedFruitColors.add(mergedColor);
-
-                    score += 20; // Bonus for merging
-                    checkHighScore();
-                    spawnNewFruit();
-                    return;  // Exit update to skip default drop handling
-                }
-                -----------------------------------------------------------------------
-                */
-
-                if (collisionCount >= 100 || (validHi && fruitYRatio <= 0.2f)) 
-                {
-                    gameOver = true;  // End the game after 5 collisions
-                    return;
+                    droppedFruitColors.add(currentFruitColor);
                 }
 
-                // If collision is detected, add the fruit to the list and spawn a new fruit
-                isDropping = false;  // End the drop
-                droppedFruits.add(new Float[] { fruitXRatio, fruitYRatio });
-                droppedFruitColors.add(currentFruitColor);  // Add the consistent color of the current fruit
-                score += 10;  // Increment score by 10
+                isDropping = false;
                 validHi = false;
-                checkHighScore();  // Check if a new high score is reached
-                spawnNewFruit();  // Reset position of the next falling fruit                
-            }
-            
+                checkHighScore();
+                spawnNewFruit();
+            }         
             else if (fruitYRatio >= 0.88f) 
             {
                 // If no collision and the fruit reaches the bottom border, stop it
@@ -288,73 +274,7 @@ public class GamePanel extends StackPane implements Runnable
             }
                 
         }
-        
-        /*--------------------------------------------------------------------
-        Original Working Collision Hitboxes
-        // If fruit is in dropping state, gradually move it down
-        if (isDropping && fruitYRatio < 0.88f) 
-        {
-            fruitYRatio += dropSpeed; // Move the fruit down slowly
 
-            // Check for collisions with dropped fruits
-            boolean collisionDetected = false;
-
-            // Check for collisions with previously dropped fruits
-           
-            for (Float[] fruit : droppedFruits) 
-            {
-                if (Math.abs(fruit[0] - fruitXRatio) < 0.1 && 
-                    Math.abs(fruit[1] - fruitYRatio) < 0.1) 
-                {
-                    
-                    
-                        collisionDetected = true;
-                        
-                        isDropping = false; 
-                        
-                        break;
-                }
-            }
-            
-            if ( fruitYRatio <= 0.25f)
-            {
-                validHi = true;
-            }
-
-            if (collisionDetected) 
-            {
-                collisionCount++;  // Increment the collision count
-
-                if (collisionCount >= 100 || (validHi && fruitYRatio <= 0.2f)) 
-                {
-                    gameOver = true;  // End the game after 5 collisions
-                    return;
-                }
-
-                // If collision is detected, add the fruit to the list and spawn a new fruit
-                isDropping = false;  // End the drop
-                droppedFruits.add(new Float[] { fruitXRatio, fruitYRatio });
-                droppedFruitColors.add(currentFruitColor);  // Add the consistent color of the current fruit
-                score += 10;  // Increment score by 10
-                checkHighScore();  // Check if a new high score is reached
-                spawnNewFruit();  // Reset position of the next falling fruit                
-            } 
-            
-            else if (fruitYRatio >= 0.88f) 
-            {
-                // If no collision and the fruit reaches the bottom border, stop it
-                fruitYRatio = 0.88f;  // Stop the drop at the bottom border
-                droppedFruits.add(new Float[] { fruitXRatio, fruitYRatio });
-                droppedFruitColors.add(currentFruitColor);  // Add the color of the new fruit
-                score += 10;  // Increment score by 10
-                checkHighScore();  // Check if a new high score is reached
-                spawnNewFruit();  // Spawn a new fruit
-                isDropping = false;  // End the drop
-            }
-        }
-        //-------------------------------------------------------
-        */
-        
         // Control movement if the fruit is not currently dropping
         
             // Control movement if the fruit is not currently dropping
@@ -400,7 +320,7 @@ public class GamePanel extends StackPane implements Runnable
     private void spawnNewFruit() 
     {
         // Set the color for the current fruit (randomly set at the beginning)
-        currentFruitColor = getRandomFruitColor(); // Assign color to current fruit if it's the first fruit
+        currentFruitColor = getRandomFruit(); // Assign color to current fruit if it's the first fruit
 
         // Reset the fruit position
         fruitXRatio = 0.5f; // Middle of the screen
@@ -430,11 +350,13 @@ public class GamePanel extends StackPane implements Runnable
             int fruitY = (int) (fruit[1] * height);
             int radius = tileSize / 2; // Radius of the fruit (half the tile size)
 
-            Color fruitColor = droppedFruitColors.get(i); // Get color from the list
+            FruitSprite fruitColor = droppedFruitColors.get(i); // Get color from the list
 
             // Draw a circle to represent a fruit
-            gc.setFill(fruitColor);
-            gc.fillOval(fruitX - radius, fruitY - radius, radius * 2, radius * 2);
+//            gc.setFill(fruitColor);
+//            gc.fillOval(fruitX - radius, fruitY - radius, radius * 2, radius * 2);
+            fruitColor.draw(gc, fruitX - radius, fruitY - radius, radius*2);
+            
         }
 
         // Render the current dropping fruit
@@ -443,8 +365,8 @@ public class GamePanel extends StackPane implements Runnable
         int currentRadius = tileSize / 2; // Radius of the fruit
 
         // Draw the current falling fruit
-        gc.setFill(currentFruitColor);
-        gc.fillOval(currentFruitX - currentRadius, currentFruitY - currentRadius, currentRadius * 2, currentRadius * 2);
+        FruitSprite fruitColor = currentFruitColor;
+        fruitColor.draw(gc, currentFruitX - currentRadius, currentFruitY - currentRadius, currentRadius * 2);
 
         int borderThickness = Math.max(tileSize / 5, 5);
         gc.setFill(Color.BLACK);
@@ -526,25 +448,25 @@ public class GamePanel extends StackPane implements Runnable
         return btn;
     }
 
-    /**
-     * Generates and returns random fruit color to be assigned to newly spawning
-     * fruit.
-     * @return random selected color object representing fruit
-     */
-    private Color getRandomFruitColor() 
+    // This method returns a random color representing a fruit
+    private FruitSprite getRandomFruit() 
     {
-        int randomFruit = (int) (Math.random() * 3);  // Randomly pick a fruit type
+        int randomFruit = ThreadLocalRandom.current().nextInt(5);
 
         switch (randomFruit) 
         {
             case 0:
-                return Color.rgb(255, 100, 100);  // Apple-like (Red)
+                return spriteFactory.getSprite("orange");
             case 1:
-                return Color.hsb(30, 0.7, 1.0);  // Orange-like (Orange)
+                return spriteFactory.getSprite("strawberry");
             case 2:
-                return Color.rgb(150, 255, 150);  // Green (Lime)
+                return spriteFactory.getSprite("banana");
+            case 3:
+                return spriteFactory.getSprite("watermelon");
+            case 4:
+                return spriteFactory.getSprite("apple");
             default:
-                return Color.BLUE; // Default to blue
+                return spriteFactory.getSprite("orange");
         }
     }
 }

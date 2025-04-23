@@ -24,7 +24,7 @@ public class Combination {
      */
     public Combination() {
         this.fruits = new LinkedList<>();
-
+ 
     }
     /**
      * Adds fruit to the combination list for combination
