@@ -197,11 +197,12 @@ public class GamePanel extends StackPane implements Runnable
                 else 
                 {
                     score += 10; // Normal score if different
-                }
+                    
+                    // Different fruits still stack
+                    droppedFruits.add(new Float[] { fruitXRatio, fruitYRatio });
+                    droppedFruitColors.add(currentFruitColor);
 
-                // Stack the fruit — no merging or removal
-                droppedFruits.add(new Float[] { fruitXRatio, fruitYRatio });
-                droppedFruitColors.add(currentFruitColor);
+                }
 
                 isDropping = false;
                 validHi = false;

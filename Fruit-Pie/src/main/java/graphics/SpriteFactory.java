@@ -24,8 +24,8 @@ public class SpriteFactory {
         sprites.put("orange", new FruitSprite("orange", new Image(getClass().getResourceAsStream("/sprites/orange.png"))));
         sprites.put("strawberry", new FruitSprite("strawberry", new Image(getClass().getResourceAsStream("/sprites/Strawberry.png"))));
         sprites.put("banana", new FruitSprite("banana", new Image(getClass().getResourceAsStream("/sprites/banana.png"))));
-        sprites.put("watermelon", new FruitSprite("strawberry", new Image(getClass().getResourceAsStream("/sprites/watermelon.png"))));
-        sprites.put("apple", new FruitSprite("banana", new Image(getClass().getResourceAsStream("/sprites/apple.png"))));
+        sprites.put("watermelon", new FruitSprite("watermelon", new Image(getClass().getResourceAsStream("/sprites/watermelon.png"))));
+        sprites.put("apple", new FruitSprite("apple", new Image(getClass().getResourceAsStream("/sprites/apple.png"))));
     }
     
     
