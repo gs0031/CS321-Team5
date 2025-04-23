@@ -13,14 +13,35 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+/**
+ * Main menu interface for the application/game
+ * Responsible for setup of JavaFX UI elements
+ * Displays high score, the background gradient,
+ * button display/setup, title, and button actions.
+ * 
+ */
 public class FruitPieMainMenu extends Application {
+    
+    /** Default constructor used only for javadoc generation */
+    public FruitPieMainMenu(){}
+    
+    /** Boolean indicator if sound is on/off(true/false) */
     private boolean soundOn = false;
+    /** Label for displaying High Score */
     private Label highScoreLabel;  // Label for high score
-
+    
+    /**
+     * Launches Main Menu(Javafx Application)
+     * @param args Command Line Arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
-
+    
+    /**
+     * Display and Initializes main menu UI Elements
+     * @param primaryStage main application window/display
+     */
     @Override
     public void start(Stage primaryStage) {
         // Gradient Background
@@ -95,7 +116,12 @@ public class FruitPieMainMenu extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
+    
+    /**
+     * Creates a styled button for the main menu 
+     * @param text Text to be displayed on the button
+     * @return a styled button
+     */
     private Button createMenuButton(String text) {
         Button btn = new Button(text);
         btn.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, 18));

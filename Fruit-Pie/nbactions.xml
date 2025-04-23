@@ -52,4 +52,14 @@
                 <exec.appArgs></exec.appArgs>
             </properties>
         </action>
+        <action>
+            <actionName>javadoc</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>generate-sources</goal>
+                <goal>javadoc:javadoc</goal>
+            </goals>
+        </action>
     </actions>

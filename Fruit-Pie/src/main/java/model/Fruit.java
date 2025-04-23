@@ -5,38 +5,44 @@
 package model;
 
 /**
- *
- * @author Scheherazade
+ *  The fruit class defines the basic methods to be implemented in FruitBase,
+ * that define fruit objects.
+ * 
+ * Provides methods to get and set the center coordinate of fruit objects and
+ * their radius. These methods/logic are defined in the FruiBase Class.
+ * 
  */
 public interface Fruit {
     
+    
     /**
-     * 
-     * @return x-coord of fruit center
+     * Returns/Gets the x coordinate of the fruits center
+     * @return x-coordinate of fruit center
      */
     int getX();
     /**
-     * 
-     * @return y-coord of fruit center
+     * Returns/gets the y coordinate of the fruits center
+     * @return y-coordinate of fruit center
      */
     int getY();
     /**
-     * 
-     * @param x new x-coordinate 
+     * Sets the x coordinate of the fruits center
+     * @param x new x-coordinate of fruit center
      */
     void setX(int x);
     /**
-     * 
-     * @param y new y-coordinate
+     * Sets the y coordinate of the fruits center
+     * @param y new y-coordinate of fruit center
      */
     void setY(int y);
     /**
-     * 
-     * @return radius of the fruit body
+     * Returns/Gets the radius of the fruit object
+     * @return radius of the fruit object
      */
     int getRadius();
     /**
-     * @param radius new radius
+     * Sets the radius of the fruit object
+     * @param radius new radius of fruit object
      */
     void setRadius(int radius);
     

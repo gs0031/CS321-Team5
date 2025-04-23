@@ -5,9 +5,14 @@
 package model;
 
 /**
+ * Orange Class is meant to be a subclass of another class in the model package.
+ * Currently unfinished. Designed to handle the 'spawn' of oranges and their details
+ * such as size, color, display, and tag.
  *
- * @author Scheherazade
  */
 public class Orange {
     
+    /** Default constructor used only for javadoc generation */
+    public Orange(){}
+
 }

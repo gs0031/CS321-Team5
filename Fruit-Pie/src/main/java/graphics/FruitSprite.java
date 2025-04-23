@@ -12,15 +12,24 @@ import model.units.Vector2D;
 
 
 /**
- *
+ * fff
  * @author Scheherazade
  */
 public class FruitSprite extends JComponent {
+    /** Image representing the fruit sprite */
     static private BufferedImage fruitImage;
-    
+    /** 
+     * Constructs the sprite and loads the sprites image from
+     * the given resource path.
+     * @param resourcePath path to the images resource/source.
+     */
     public FruitSprite(String resourcePath) {
         loadResource(resourcePath);
     }
+    /**
+     * Loads the fruit image resource from the specified path
+     * @param path path to the source of the image
+     */
     public void loadResource(String path) { 
         try {
             try (InputStream input = FruitSprite.class.getClassLoader().getResourceAsStream(path)) {
@@ -34,6 +43,12 @@ public class FruitSprite extends JComponent {
             e.printStackTrace();
         }
     }
+    /**
+     * Draws fruit image onto screen at a given position and radius
+     * @param g graphics kit context for drawing the image
+     * @param position position x and y on screen where image is to be drawn.
+     * @param radius  width and height of drawn image.
+     */
     public void draw(Graphics2D g, Vector2D position, int radius) {
         super.paintComponent(g);
         g.drawImage(fruitImage, (int)position.x, (int)position.y, radius, radius, this);

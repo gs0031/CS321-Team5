@@ -19,10 +19,14 @@ import fruitpie.mainmenu.FruitPieMainMenu;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * hgggjhnm
+ * 
+ */
 
 public class GamePanel extends StackPane implements Runnable 
 {
-
+    /** lol */
     public static int highScore = 0;  // Static high score variable
 
     private final Canvas canvas = new Canvas(960, 768);
@@ -59,6 +63,10 @@ public class GamePanel extends StackPane implements Runnable
     private int collisionCount = 0; // Track the number of collisions
 
     // Constructor
+    /**
+     * ff
+     * @param scene ff
+     */
     public GamePanel(Scene scene) 
     {
         this.scene = scene;
@@ -78,6 +86,10 @@ public class GamePanel extends StackPane implements Runnable
     }
 
     // Handle mouse click event to start the drop slowly
+    /**
+     * ff
+     * @param event ff
+     */
     private void handleMouseClick(MouseEvent event) 
     {
         if (!isDropping && fruitYRatio < 0.78f) 
@@ -87,12 +99,18 @@ public class GamePanel extends StackPane implements Runnable
     }
 
     // Start game thread
+    /**
+     * ggg
+     */
     public void startGameThread() 
     {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
+    /**
+     * kjkj
+     */
     @Override
     public void run() 
     {
@@ -127,6 +145,9 @@ public class GamePanel extends StackPane implements Runnable
     }
 
     // Game Logic
+    /**
+     * jhjhhhj
+     */
     public void update() 
     {
         if (keyH.escPressed) 
@@ -310,6 +331,7 @@ public class GamePanel extends StackPane implements Runnable
         // Control movement if the fruit is not currently dropping
         
             // Control movement if the fruit is not currently dropping
+       
             if(!isDropping)
             {
                 if (fruitYRatio < 0.88f) 
@@ -331,6 +353,9 @@ public class GamePanel extends StackPane implements Runnable
     }
 
     // Check if the current score is a new high score
+    /**
+     * jhjh
+     */
     private void checkHighScore() 
     {
         if (score > highScore) 
@@ -340,6 +365,9 @@ public class GamePanel extends StackPane implements Runnable
     }
 
     // Spawn a new fruit after the previous one has dropped
+    /**
+     * jhjh
+     */
     private void spawnNewFruit() 
     {
         // Set the color for the current fruit (randomly set at the beginning)
@@ -351,6 +379,9 @@ public class GamePanel extends StackPane implements Runnable
     }
 
     // Render game visuals
+    /**
+     * jhj
+     */
     public void render() 
     {
         int width = (int) canvas.getWidth();
@@ -397,6 +428,9 @@ public class GamePanel extends StackPane implements Runnable
     }
 
     // Game Over UI
+    /**
+     * jhj
+     */
     public void renderGameOverScreen() 
     {
         render(); // Draw last game frame
@@ -443,6 +477,11 @@ public class GamePanel extends StackPane implements Runnable
     }
 
     // Menu button creation method
+    /**
+     * kjnkerg
+     * @param text etkgj
+     * @return emg,m
+     */
     private Button createMenuButton(String text) 
     {
         Button btn = new Button(text);
@@ -455,6 +494,10 @@ public class GamePanel extends StackPane implements Runnable
     }
 
     // This method returns a random color representing a fruit
+    /**
+     * sdfs
+     * @return fsfs
+     */
     private Color getRandomFruitColor() 
     {
         int randomFruit = (int) (Math.random() * 3);  // Randomly pick a fruit type
