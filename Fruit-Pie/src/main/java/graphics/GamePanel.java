@@ -187,8 +187,6 @@ public class GamePanel extends StackPane implements Runnable
                     return;
                 }
                 
-                System.out.println("Current: " + currentFruitColor.getName() + ", Colliding: " + collidingFruitColor.getName());
-                
                 // Determine score based on fruit match
                 if (currentFruitColor.getName().equals(collidingFruitColor.getName())) 
                 {
@@ -197,13 +195,12 @@ public class GamePanel extends StackPane implements Runnable
                 else 
                 {
                     score += 10; // Normal score if different
-                    
+
                     // Different fruits still stack
                     droppedFruits.add(new Float[] { fruitXRatio, fruitYRatio });
                     droppedFruitColors.add(currentFruitColor);
-
                 }
-
+                
                 isDropping = false;
                 validHi = false;
                 checkHighScore();
