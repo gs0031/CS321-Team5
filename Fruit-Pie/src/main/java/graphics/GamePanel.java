@@ -287,7 +287,7 @@ public class GamePanel extends StackPane implements Runnable
             // Draw a circle to represent a fruit
 //            gc.setFill(fruitColor);
 //            gc.fillOval(fruitX - radius, fruitY - radius, radius * 2, radius * 2);
-            fruitColor.draw(gc, fruitX, fruitY, radius*2);
+            fruitColor.draw(gc, fruitX - radius, fruitY - radius, radius*2);
             
         }
 
