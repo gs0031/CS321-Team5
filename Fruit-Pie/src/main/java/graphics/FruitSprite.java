@@ -3,53 +3,37 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package graphics;
+
 import javafx.scene.canvas.GraphicsContext;
-import java.awt.image.BufferedImage;
 import javafx.scene.image.Image;
-import javax.imageio.ImageIO;
-import java.io.*;
-import javax.swing.JComponent;
-import model.units.Vector2D;
-import javafx.embed.swing.SwingFXUtils;
 
+public class FruitSprite {
+    private final String name;
+    private final Image image;
 
-/**
- *
- * @author Scheherazade
- */
-public class FruitSprite extends JComponent {
-    private BufferedImage fruitBufferedImage;
-    private Image fruitImage;
-    
-    public FruitSprite(String resourcePath) {
-//        this.resourcePath = resourcePath;
-        loadResource(resourcePath);
+    public FruitSprite(String name, Image image) {
+        this.name = name;
+        this.image = image;
     }
-    private void loadResource(String path) { 
-        try {
-            try (InputStream input = FruitSprite.class.getClassLoader().getResourceAsStream(path)) {
-                if( input != null ) {
-                    fruitBufferedImage = ImageIO.read(input);
-                } else {
-                    System.err.println("Resource not found");
-                }
-                fruitImage = SwingFXUtils.toFXImage(fruitBufferedImage, null);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    public String getName() {
+        return name;
     }
-    /**
-     * Registers parameters which are used to draw a bufferedimage onto the canvas
-     * @param gc graphics context parameter
-     * @param position Vector2D pos to draw the image on
-     * @param radius radius
-     */
-    public void draw(GraphicsContext gc, float x, float y, int radius) {
-        if(fruitImage != null) {
-            gc.drawImage(fruitImage, x, y, radius, radius);
-        
-        }
+
+    public void draw(GraphicsContext gc, int x, int y, int size) {
+        gc.drawImage(image, x, y, size, size);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof FruitSprite)) return false;
+        FruitSprite other = (FruitSprite) obj;
+        return this.name.equals(other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }
-

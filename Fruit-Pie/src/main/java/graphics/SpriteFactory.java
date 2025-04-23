@@ -6,6 +6,7 @@ package graphics;
 
 import java.util.Map;
 import java.util.HashMap;
+import javafx.scene.image.Image;
 
 /**
  * Handles some basic instantiation of graphics objects
@@ -20,11 +21,11 @@ public class SpriteFactory {
     }
     
     private void initSprites() {
-        
-        sprites.put("orange", new FruitSprite("orange.png"));
-//        sprites.put("strawberry", new FruitSprite("Strawberry.png"));
-        sprites.put("banana", new FruitSprite("banana.png"));
-        
+        sprites.put("orange", new FruitSprite("orange", new Image(getClass().getResourceAsStream("/sprites/orange.png"))));
+        sprites.put("strawberry", new FruitSprite("strawberry", new Image(getClass().getResourceAsStream("/sprites/Strawberry.png"))));
+        sprites.put("banana", new FruitSprite("banana", new Image(getClass().getResourceAsStream("/sprites/banana.png"))));
+        sprites.put("watermelon", new FruitSprite("strawberry", new Image(getClass().getResourceAsStream("/sprites/watermelon.png"))));
+        sprites.put("apple", new FruitSprite("banana", new Image(getClass().getResourceAsStream("/sprites/apple.png"))));
     }
     
     
