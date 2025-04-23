@@ -18,7 +18,7 @@ public class Combination {
      */
     public Combination() {
         this.fruits = new LinkedList<>();
-
+ 
     }
     public void addFruit(Fruit fruit) {
         fruits.add(fruit);

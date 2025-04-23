@@ -3,12 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package graphics;
-import java.awt.Graphics2D;
+import javafx.scene.canvas.GraphicsContext;
 import java.awt.image.BufferedImage;
+import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
 import java.io.*;
 import javax.swing.JComponent;
 import model.units.Vector2D;
+import javafx.embed.swing.SwingFXUtils;
 
 
 /**
@@ -16,27 +18,38 @@ import model.units.Vector2D;
  * @author Scheherazade
  */
 public class FruitSprite extends JComponent {
-    static private BufferedImage fruitImage;
+    private BufferedImage fruitBufferedImage;
+    private Image fruitImage;
     
     public FruitSprite(String resourcePath) {
+//        this.resourcePath = resourcePath;
         loadResource(resourcePath);
     }
-    public void loadResource(String path) { 
+    private void loadResource(String path) { 
         try {
             try (InputStream input = FruitSprite.class.getClassLoader().getResourceAsStream(path)) {
                 if( input != null ) {
-                    fruitImage = ImageIO.read(input);
+                    fruitBufferedImage = ImageIO.read(input);
                 } else {
-//                    System.err.println("Resource not found");
+                    System.err.println("Resource not found");
                 }
+                fruitImage = SwingFXUtils.toFXImage(fruitBufferedImage, null);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void draw(Graphics2D g, Vector2D position, int radius) {
-        super.paintComponent(g);
-        g.drawImage(fruitImage, (int)position.x, (int)position.y, radius, radius, this);
+    /**
+     * Registers parameters which are used to draw a bufferedimage onto the canvas
+     * @param gc graphics context parameter
+     * @param position Vector2D pos to draw the image on
+     * @param radius radius
+     */
+    public void draw(GraphicsContext gc, float x, float y, int radius) {
+        if(fruitImage != null) {
+            gc.drawImage(fruitImage, x, y, radius, radius);
         
+        }
     }
 }
+
