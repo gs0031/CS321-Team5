@@ -9,15 +9,8 @@ import java.awt.image.BufferedImage;
 
 
 /**
- * FruitBase class provides a basic implementation of the Fruit model.
- * It is used to define the common properties shared by fruit objects such as
- * the size/radius of the object and the position of the fruit object.
  * 
- * This class sets and retrieves the x, y coordinates of the fruits center 
- * and radius of the fruit.
- * 
- *  Will be extended by other fruit classes such as orange, etc.
- * 
+ * @author Scheherazade
  */
 public abstract class FruitBase implements Fruit {
     protected Vector2D position;
@@ -36,31 +29,14 @@ public abstract class FruitBase implements Fruit {
         this.radius = radius;
         
     }
-    /**
-     * Returns/Gets the x coordinate of the fruits center
-     * @return the x coordinate
-     */
-    @Override
-    public int getX() {
-        return x;
-    }
-    /**
-     * Returns/Gets the y coordinate of the fruits center
-     * @return the y coordinate 
-     */
     @Override
     public Vector2D getPosition() {
         return position;
     }
-    /**
-     * Sets the x coordinate of the fruits center
-     * @param x the new x coordinate of the fruit
-     */
     @Override
     public void setPosition(float x, float y) {
         this.position.x = x;
         this.position.y = y;
     }
-
     
 }

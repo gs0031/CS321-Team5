@@ -30,56 +30,34 @@ import model.Orange;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * GamePanel class manages the rendering, game loop, and game logic 
- * for FruitPie's game play. The class handles keyboard and mouse inputs,
- * renders the game scene through JavaFX, and continually updates the game
- * state based on dropped fruits, collisions, and score.
- * 
- */
-
 public class GamePanel extends StackPane implements Runnable 
 {
-    /** Static high score variable, tracks highest score from all sessions */
-    public static int highScore = 0; 
-    /** The main drawing/scene canvas/area */
+
+    public static int highScore = 0;  // Static high score variable
+
     private final Canvas canvas = new Canvas(960, 768);
-    /** Graphics context for rendering game visuals */
     private final GraphicsContext gc = canvas.getGraphicsContext2D();
-    /** number of grid columns */
-    final int maxScreenCol = 20; 
-    /** number of grid rows*/
-    final int maxScreenRow = 16;  
-    /** Scenes target Frames per second */
+
+    final int maxScreenCol = 20;  // Grid columns
+    final int maxScreenRow = 16;  // Grid rows
     int FPS = 60;
 
-    /** Handles user keyboard inputs */
     InputHandler keyH = new InputHandler();
-    /** main game thread */
     Thread gameThread;
 
-    /** Starting x position of the fruit (middle of the screen) */
-    float fruitXRatio = 0.5f; 
-    /** Starting Y position for the fruit (top of the screen) */
-    float fruitYRatio = 0.15f;
+    float fruitXRatio = 0.5f; // Starting position of the fruit (middle of the screen)
+    float fruitYRatio = 0.15f; // Starting Y position for the fruit (top of the screen)
     
-    /** ask about later */
     private boolean validHi;
-    
-    /** True when game over condition is reached. */
-    boolean gameOver = false;
-    /** Track the current score */
-    int score = 0; 
 
-    /** UI container for game over buttons */
+    boolean gameOver = false;
+    int score = 0;  // Track the current score
+
     private VBox buttonBox;
-    /** reference to the current active scene */
     private Scene scene;
 
-    /** Track if the fruit is in the dropping/falling state */
-    private boolean isDropping = false; 
-    /** Speed of the fruit when dropping */
-    private double dropSpeed = 0.02; 
+    private boolean isDropping = false; // Track if the fruit is in the dropping state
+    private double dropSpeed = 0.02; // Speed of the drop
 
     private List<Float[]> droppedFruits = new ArrayList<>(); // List to track all dropped fruits
     private List<FruitSprite> droppedFruitColors = new ArrayList<>(); // List to track fruit colors
@@ -89,27 +67,10 @@ public class GamePanel extends StackPane implements Runnable
     private FruitSprite currentFruitColor = getRandomFruit();
     private FruitSprite collidingFruitColor;
     
-    /** List to track all dropped fruits positions */
-    private List<Float[]> droppedFruits = new ArrayList<>();
-    /** List to track dropped fruits colors */
-    private List<Color> droppedFruitColors = new ArrayList<>();
 
-    
-    /** Color of the current falling fruit */
-    private Color currentFruitColor = getRandomFruitColor();
-    /** Color of the fruit being collided with */
-    private Color collidingFruitColor;
+    private int collisionCount = 0; // Track the number of collisions
 
-    /** Track the number of collisions occurred */
-    private int collisionCount = 0; 
-
-
-    /**
-     * Constructs the new game panel
-     * Sets up input listeners for keyboard and mouse and starts game
-     * thread/loop.
-     * @param scene ff
-     */
+    // Constructor
     public GamePanel(Scene scene) 
     {
         this.scene = scene;
@@ -128,11 +89,7 @@ public class GamePanel extends StackPane implements Runnable
         startGameThread();
     }
 
-   
-    /**
-     * Handle mouse click event to trigger the fruit drop slowly
-     * @param event Mouse Click Event from input system
-     */
+    // Handle mouse click event to start the drop slowly
     private void handleMouseClick(MouseEvent event) 
     {
         if (!isDropping && fruitYRatio < 0.78f) 
@@ -142,18 +99,12 @@ public class GamePanel extends StackPane implements Runnable
     }
 
     // Start game thread
-    /**
-     * Starts the gam loop on new thread
-     */
     public void startGameThread() 
     {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
-    /**
-     * Main game loop that handles timing, updating and handling
-     */
     @Override
     public void run() 
     {
@@ -187,12 +138,7 @@ public class GamePanel extends StackPane implements Runnable
         }
     }
 
-
-    /**
-     * Deals with the Game Logic
-     * Updates the game state, including fruit movements, collisions, 
-     * and score tracking.
-     */
+    // Game Logic
     public void update() 
     {
         if (keyH.escPressed) 
@@ -278,7 +224,6 @@ public class GamePanel extends StackPane implements Runnable
         // Control movement if the fruit is not currently dropping
         
             // Control movement if the fruit is not currently dropping
-       
             if(!isDropping)
             {
                 if (fruitYRatio < 0.88f) 
@@ -299,11 +244,7 @@ public class GamePanel extends StackPane implements Runnable
             }
     }
 
-    
-    /**
-     * Checks if the current score is a new high score
-     * If is, updates the static highs core
-     */
+    // Check if the current score is a new high score
     private void checkHighScore() 
     {
         if (score > highScore) 
@@ -312,11 +253,7 @@ public class GamePanel extends StackPane implements Runnable
         }
     }
 
-    
-    /**
-     * Spawn a new fruit after the previous one has dropped
-     * Spawns with new random color a resets to starting position.
-     */
+    // Spawn a new fruit after the previous one has dropped
     private void spawnNewFruit() 
     {
         // Set the color for the current fruit (randomly set at the beginning)
@@ -327,12 +264,7 @@ public class GamePanel extends StackPane implements Runnable
         fruitYRatio = 0.15f; // Top of the screen
     }
 
-    
-    /**
-     * Renders game visuals such as the background, dropped fruits, and current
-     * fruit
-     * Draws circles to represent current and already falling/fallen fruit.
-     */
+    // Render game visuals
     public void render() 
     {
         int width = (int) canvas.getWidth();
@@ -380,12 +312,7 @@ public class GamePanel extends StackPane implements Runnable
         gc.fillText("Score: " + score, 20, 40);
     }
 
-    
-    /**
-     * Renders the game over screen with score display and menu buttons
-     * Buttons exit application or return to main menu screen.
-     * Renders last game frame.
-     */
+    // Game Over UI
     public void renderGameOverScreen() 
     {
         render(); // Draw last game frame
@@ -431,12 +358,7 @@ public class GamePanel extends StackPane implements Runnable
         this.getChildren().add(centerBox);
     }
 
-    
-    /**
-     * Styled Menu button creation method
-     * @param text Text that is displayed on the button
-     * @return Styled Menu Button, JavaFX
-     */
+    // Menu button creation method
     private Button createMenuButton(String text) 
     {
         Button btn = new Button(text);
