@@ -12,7 +12,10 @@ import model.units.Vector2D;
 
 
 /**
- * fff
+ * Graphics component that represents our fruit sprite that is to be drawn on 
+ * screen
+ * Class handles loading the image source of the fruit and drawing it at a
+ * specified location with a specified radius/size.
  * @author Scheherazade
  */
 public class FruitSprite extends JComponent {
