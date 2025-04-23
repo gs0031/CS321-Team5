@@ -196,6 +196,12 @@ public class GamePanel extends StackPane implements Runnable
 //                System.out.println("Current Fruit Color: " + currentFruitColor.toString());
 //                System.out.println("Colliding Fruit Color: " + collidingFruitColor.toString());
                 
+//                if(currentFruitColor == collidingFruitColor) {
+//                    score+=20;
+//                }
+
+
+                
                 collisionCount++;  // Increment the collision count
                 
                 /*-------------------------------------------------------------------
@@ -354,7 +360,7 @@ public class GamePanel extends StackPane implements Runnable
     private void spawnNewFruit() 
     {
         // Set the color for the current fruit (randomly set at the beginning)
-//        currentFruitColor = getRandomFruit(); // Assign color to current fruit if it's the first fruit
+        currentFruitColor = getRandomFruit(); // Assign color to current fruit if it's the first fruit
 
         // Reset the fruit position
         fruitXRatio = 0.5f; // Middle of the screen
