@@ -16,6 +16,7 @@ import model.units.Vector2D;
  */
 public interface Fruit {
     
+    
     /*
     * @return vector of floating point x and y center of fruit
     */
