@@ -17,22 +17,26 @@ import model.units.Vector2D;
 public interface Fruit {
     
     
-    /*
-    * @return vector of floating point x and y center of fruit
-    */
+    /**
+     * Gets/Returns the position of center x/y values of fruit type object
+     * @return vector of floating point x and y center of fruit
+     */
     Vector2D getPosition();
-    /*
-    * @param x floating point coordinate of x to be registered
-    * @param y floating point coordinate of y to be registered
-    */
+    /**
+     * Set position of object through floating point coordinates
+     * @param x floating point coordinate of x to be registered
+     * @param y floating point coordinate of y to be registered
+     */
     void setPosition(float x, float y);
-    /*
-    * @return floating point radius of fruit
-    */
+    /**
+     * Gets floating point radius of fruit/object
+     * @return floating point radius of fruit
+     */
     float getRadius();
-    /*
-    * @param radius floating point radius to be registered
-    */
+    /**
+     * Sets the radius value of fruit object.
+     * @param radius floating point radius to be registered
+     */
     void setRadius(float radius);
     
 }

@@ -30,6 +30,13 @@ import model.Orange;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * GamePanel class manages the rendering, game loop, and game logic 
+ * for FruitPie's game play. The class handles keyboard and mouse inputs,
+ * renders the game scene through JavaFX, and continually updates the game
+ * state based on dropped fruits, collisions, and score.
+ * 
+ */
 public class GamePanel extends StackPane implements Runnable 
 {
     /** Static high score variable, tracks highest score from all sessions */
