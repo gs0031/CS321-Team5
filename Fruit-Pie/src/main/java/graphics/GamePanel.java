@@ -17,16 +17,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import fruitpie.mainmenu.FruitPieMainMenu;
 import java.util.concurrent.ThreadLocalRandom;
-
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import model.Combination;
-import model.Fruit;
-import model.Orange;
-
 import java.util.ArrayList;
 import java.util.List;
 
